@@ -1,3 +1,12 @@
+Based on IcedTea-Web v1.7.1
+
+Compile
+========
+yum install glib*
+./configure --disable-native-plugin --with-jdk-home=$JAVA_HOME
+
+
+
 IcedTea-Web
 ===========
 
