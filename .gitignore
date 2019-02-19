@@ -1,0 +1,27 @@
+# IntelliJ files #
+.idea/
+
+# Config log #
+config.log
+
+# Build files #
+completion/
+docs/
+icedtea-web-docs/
+launcher.build/
+liveconnect/
+metadata/
+netx.build/
+netx/
+stamps/
+build.properties
+config.status
+jrunscript
+Makefile
+netx.manifest
+itweb-settings.desktop
+javaws.desktop
+liveconnect-source-files.txt
+netx-source-files.txt
+policyeditor.desktop
+printvarsfile
