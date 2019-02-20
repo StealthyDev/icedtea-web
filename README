@@ -7,6 +7,10 @@ yum install glib*
 make
 make install
 
+clear build script
+===================
+sed -i -e 's/\r$//' clear-build-files.sh
+
 IcedTea-Web
 ===========
 
