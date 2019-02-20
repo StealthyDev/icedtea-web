@@ -1,21 +1,21 @@
 # IntelliJ files #
 .idea/
 
-# Config log #
-config.log
-
 # Build files #
-completion/
+netx/net/sourceforge/jnlp/resources/*.html
+completion/*.bash
+
+target/
 docs/
 icedtea-web-docs/
 launcher.build/
 liveconnect/
 metadata/
 netx.build/
-netx/
 stamps/
 build.properties
 config.status
+config.log
 jrunscript
 Makefile
 netx.manifest
