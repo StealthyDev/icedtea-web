@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.EnumSet;
@@ -48,7 +49,7 @@ public class ResourceDownloader implements Runnable {
         this.lock = lock;
     }
 
-    static int getUrlResponseCode(URL url, Map<String, String> requestProperties, ResourceTracker.RequestMethods requestMethod) throws IOException {
+    static int getUrlResponseCode(URL url, Map<String, String> requestProperties, ResourceTracker.RequestMethods requestMethod) throws IOException, URISyntaxException {
         return getUrlResponseCodeWithRedirectonResult(url, requestProperties, requestMethod).result;
     }
 
@@ -61,9 +62,10 @@ public class ResourceDownloader implements Runnable {
      * HttpURLConnection.HTTP_OK and null if not.
      * @throws IOException
      */
-    static UrlRequestResult getUrlResponseCodeWithRedirectonResult(URL url, Map<String, String> requestProperties, ResourceTracker.RequestMethods requestMethod) throws IOException {
+    static UrlRequestResult getUrlResponseCodeWithRedirectonResult(URL url, Map<String, String> requestProperties, ResourceTracker.RequestMethods requestMethod) throws IOException, URISyntaxException {
         UrlRequestResult result = new UrlRequestResult();
-        URLConnection connection = ConnectionFactory.getConnectionFactory().openConnection(url);
+        URL normalizedUrl = url.toURI().normalize().toURL();
+        URLConnection connection = ConnectionFactory.getConnectionFactory().openConnection(normalizedUrl);
 
         for (Map.Entry<String, String> property : requestProperties.entrySet()) {
             connection.addRequestProperty(property.getKey(), property.getValue());
@@ -301,6 +303,9 @@ public class ResourceDownloader implements Runnable {
                     // continue to next candidate
                     OutputController.getLogger().log(OutputController.Level.ERROR_DEBUG, "While processing " + url.toString() + " by " + requestMethod + " for resource " + resource.toString() + " got " + e + ": ");
                     OutputController.getLogger().log(e);
+                } catch (URISyntaxException e) {
+                    OutputController.getLogger().log(OutputController.Level.ERROR_DEBUG, "While processing " + url.toString() + " by " + requestMethod + " for resource " + resource.toString() + " got " + e + ": ");
+                    OutputController.getLogger().log(e);
                 }
             }
         }
@@ -357,8 +362,9 @@ public class ResourceDownloader implements Runnable {
         }
     }
 
-    private URLConnection getDownloadConnection(URL location) throws IOException {
-        URLConnection con = ConnectionFactory.getConnectionFactory().openConnection(location);
+    private URLConnection getDownloadConnection(URL location) throws IOException, URISyntaxException {
+        URL normalizedUrl = location.toURI().normalize().toURL();
+        URLConnection con = ConnectionFactory.getConnectionFactory().openConnection(normalizedUrl);
         con.addRequestProperty("Accept-Encoding", "pack200-gzip, gzip");
         con.connect();
         return con;
